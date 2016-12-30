@@ -4,7 +4,7 @@
 !function(){
     var Saga = {
 
-        /* 
+        /*
          *  Switch this to true if all the dependencies are already loaded,
          *  for example via a bundeld js file.
          */
@@ -21,9 +21,9 @@
             this.gallery();
             this.fullWidthImages();
             this.lightBox();
-            this.stickyFooter();
-            this.initializeFeed();
-            this.initializePostNavigation();
+            // this.stickyFooter();
+            // this.initializeFeed();
+            // this.initializePostNavigation();
         },
 
         highlightCode: function(){
@@ -32,19 +32,19 @@
             }
 
             this.getScript('/assets/js/helper/highlight.min.js')
-            .then(function() { 
+            .then(function() {
                 hljs.initHighlightingOnLoad();
             });
         },
 
         responsiveVideos: function(){
-            this.getScript('/assets/js/helper/jquery.fitvids.js').then($.proxy(function() { 
+            this.getScript('/assets/js/helper/jquery.fitvids.js').then($.proxy(function() {
                 this.$main.fitVids();
             }, this));
         },
 
         gallery: function(){
-            if( $('p a:not(:only-child) img').closest('p').length === 0 
+            if( $('p a:not(:only-child) img').closest('p').length === 0
                 && $('p img:not(:only-child)').closest('p').length === 0){
                 return;
             }
@@ -121,7 +121,7 @@
 
         stickyFooter: function(){
             var resize = $.proxy(function(){
-                this.$main.css('min-height', 
+                this.$main.css('min-height',
                     $(window).height() - $('#header').height() - $('#footer').height()
                 );
             }, this);
@@ -205,7 +205,7 @@
                 $(this).html("<i class='fa fa-spinner fa-spin'></i>");
 
                 // Grab data from next page
-                $.get(this.nextLink, function(data){ 
+                $.get(this.nextLink, function(data){
                     // Append all posts to #content
                     var posts = $(data).find('.post');
                     $.each(posts,function(){
@@ -230,7 +230,7 @@
                 });
             } else {
                 $('#loadmore').remove();
-            }   
+            }
         },
 
         loadedScripts: {},
@@ -267,7 +267,7 @@
             } else {
                 loader();
             }
-            
+
             return promise;
         },
 

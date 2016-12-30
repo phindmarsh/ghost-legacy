@@ -20,7 +20,7 @@ body {
         width: 100%;
         height: 100%;
     }
-    
+
     .header-content {
         width: $wrapper-width;
         margin: auto;
@@ -41,7 +41,7 @@ body {
             text-decoration: none;
             color: $white;
         }
-        
+
         .post-data, .tag-data {
             color: $grey;
             @include font-size(14);
@@ -107,11 +107,11 @@ body {
                     }
                 }
             }
-        }   
+        }
     }
 }
 
-.home-template, .archive-template {
+.home-template, .archive-template, .index-template {
     #header {
         height: 60px;
         position: relative;
@@ -135,7 +135,7 @@ body {
                 @include font-size(14);
                 letter-spacing: 0;
                 margin: 0;
-                
+
             }
             nav.links ul li a {
                 color: darken($white, 40%);
@@ -154,7 +154,7 @@ body {
     }
 }
 
-.post-template, .tag-template, .author-template {
+.post-template, .tag-template, .author-template, .page-template {
     #header {
         position: relative;
         .blog-content {
@@ -237,10 +237,6 @@ body {
         background: darken($white, 5%);
         .post {
             $post-padding: 20px;
-            float: left;
-            max-width: 100%;
-            width: 100%;
-            margin: inherit;
             margin-bottom: $gutter;
             background: $white;
             @include box-sizing(border-box);
@@ -272,6 +268,12 @@ body {
                     font-weight: 400;
                     @include transition(transform ease 0.5s);
                 }
+                .post-date {
+                    position: absolute;
+                    bottom: $post-padding + 10px;
+                    left: 0;
+                    @include transition(transform ease 0.5s);
+                }
                 &:hover {
                     img {
                         opacity: 1;
@@ -280,12 +282,20 @@ body {
                     .post-title {
                         @include transform(translateY(110%));
                     }
-                }               
+                    .post-date {
+                        @include transform(translateY(230%));
+                    }
+                }
             }
-            .post-title {            
+            .post-title {
                 margin: 0 $post-padding $post-padding $post-padding;
                 padding-top: $post-padding;
                 @include font-size(25);
+            }
+            .post-date {
+                margin: $post-padding;
+                color: darken($white, 20%);
+                @include font-size(18);
             }
             .post-content {
                 @include box-sizing(border-box);
@@ -316,11 +326,10 @@ body {
                     margin-right: $post-padding / 2;
                 }
             }
-            
+
         }
     }
     .pagination {
-        display: none;
         @include font-size(13);
         text-align: center;
         margin: 20px auto;
@@ -373,7 +382,7 @@ body {
                     color: rgb(216, 81, 81);
                 }
             }
-            
+
         }
     }
     a {
@@ -401,6 +410,13 @@ body {
                     @include font-size(18);
                     letter-spacing: 0;
                 }
+            }
+        }
+    }
+    #main {
+        &.archive {
+            .post-image {
+                max-height: 22rem;
             }
         }
     }
@@ -434,11 +450,8 @@ body {
     #main {
         padding: 20px 20px;
         &.archive {
-            .post {
-                width: unquote("calc( 50% -  ( "+$gutter+"  / 2) )");
-                &.featured {
-                    width: 100%;
-                }
+            .post-image {
+                max-height: 25rem;
             }
         }
     }
@@ -447,11 +460,8 @@ body {
     #main {
         @include box-sizing(border-box);
         &.archive {
-            .post {
-                width: unquote("calc( ( 100% - ("+$gutter+"* 2) ) / 3 )");
-                &.featured {
-                    width: unquote("calc( ( 100% - ("+$gutter+" * 2) ) * ( 2 / 3 ) + "+$gutter+")");
-                }
+            .post-image {
+                max-height: 30rem;
             }
         }
     }
@@ -473,14 +483,10 @@ body {
             }
         }
     }
-    #main {
+}    #main {
         &.archive {
-            .post {
-                width: unquote("calc( ( 100% - ("+$gutter+" * 3) ) / 4 )");
-                &.featured {
-                    width: unquote("calc( ( 100% - ("+$gutter+" * 3) ) / 2 + "+$gutter+")");
-                }
+            .post-image {
+                max-height: 30rem;
             }
         }
     }
-}

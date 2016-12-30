@@ -20,7 +20,7 @@
             this.responsiveVideos();
             this.gallery();
             this.fullWidthImages();
-            this.lightBox();
+            // this.lightBox();
             // this.stickyFooter();
             // this.initializeFeed();
             // this.initializePostNavigation();
@@ -50,8 +50,8 @@
             }
 
             this.getScript('/assets/js/helper/imagesloaded.pkgd.min.js').then($.proxy(function() {
-                $('p a:not(:only-child) img').closest('p').addClass('gallery');
-                $('p img:not(:only-child)').closest('p').addClass('gallery');
+                $('p a:not(:only-child) img').closest('p').addClass('gallery').hide();
+                $('p img:not(:only-child)').each(function(i, item) { $(item).wrap('<a href="'+item.src+'" class="lb-image"></a>') }).closest('p').addClass('gallery').hide();
                 $('.gallery').imagesLoaded($.proxy(this.onGallery, this));
                 $(window).resize($.proxy(this.onGallery, this));
             }, this));
@@ -59,19 +59,23 @@
 
         onGallery: function(){
             this.getScript('/assets/js/helper/gallery.min.js').then(function() { // Load in script for gallery
-                    var size = 0;
-                    if ($(window).height() > $(window).width()){
-                        size = $(window).height();
-                    } else {
-                        size = $(window).width();
-                    }
-                    if (size < 210){
-                        size = 210;
-                    }
-                    $('.gallery').removeWhitespace().collagePlus({
-                            'targetHeight': size/5
-                    });
-                });
+                    return $('.gallery').fadeIn().promise();
+                })
+                .then(function(){
+                  var size = 0;
+                  if ($(window).height() > $(window).width()){
+                      size = $(window).height();
+                  } else {
+                      size = $(window).width();
+                  }
+                  if (size < 210){
+                      size = 210;
+                  }
+                  $('.gallery').removeWhitespace().collagePlus({
+                          'targetHeight': size/5
+                  });
+                })
+                .then($.proxy(this.lightBox(), this));
         },
 
         fullWidthImages: function(){

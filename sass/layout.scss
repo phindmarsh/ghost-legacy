@@ -172,6 +172,23 @@ body {
             }
         }
     }
+
+    .post .post-gallery-image {
+        position: relative;
+        &:after {
+            content: attr(title);
+            position: absolute;
+            z-index: 999;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            width: 100%;
+            @include box-sizing(border-box);
+            padding: 1rem 1.5rem;
+            color: darken($white, 20%);
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+    }
 }
 
 .post-template, .page-template {
@@ -326,7 +343,6 @@ body {
                     margin-right: $post-padding / 2;
                 }
             }
-
         }
     }
     .pagination {

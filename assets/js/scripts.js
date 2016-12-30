@@ -20,10 +20,6 @@
             this.responsiveVideos();
             this.gallery();
             this.fullWidthImages();
-            // this.lightBox();
-            // this.stickyFooter();
-            // this.initializeFeed();
-            // this.initializePostNavigation();
         },
 
         highlightCode: function(){
@@ -51,7 +47,7 @@
 
             this.getScript('/assets/js/helper/imagesloaded.pkgd.min.js').then($.proxy(function() {
                 $('p a:not(:only-child) img').closest('p').addClass('gallery').hide();
-                $('p img:not(:only-child)').each(function(i, item) { $(item).wrap('<a href="'+item.src+'" class="lb-image"></a>') }).closest('p').addClass('gallery').hide();
+                $('p img:not(:only-child)').each(function(i, item) { $(item).wrap('<a href="'+item.src+'" class="post-gallery-image" title="'+item.alt+'"></a>') }).closest('p').addClass('gallery').hide();
                 $('.gallery').imagesLoaded($.proxy(this.onGallery, this));
                 $(window).resize($.proxy(this.onGallery, this));
             }, this));
@@ -75,7 +71,7 @@
                           'targetHeight': size/5
                   });
                 })
-                .then($.proxy(this.lightBox(), this));
+                .then($.proxy(this.lightBox, this));
         },
 
         fullWidthImages: function(){
@@ -134,110 +130,11 @@
             $(window).resize(resize);
         },
 
-        initializeFeed: function(){
-            if(!this.$main.hasClass('archive')){
-                return;
-            }
-
-            this.getScripts([
-                '/assets/js/helper/masonry.pkgd.min.js',
-                '/assets/js/helper/imagesloaded.pkgd.min.js'
-            ]).then($.proxy(function(){
-                this.$main.imagesLoaded($.proxy(this.feed, this));
-            }, this));
+        loadedScripts: {
+          '/assets/js/helper/imagesloaded.pkgd.min.js': true,
+          '/assets/js/helper/jquery.fluidbox.min.js': true,
+          '/assets/js/helper/gallery.min.js': true
         },
-
-        feed: function(){
-            this.$masonry = $('.feed').masonry({
-                columnWidth: '.post:not(.featured)',
-                itemSelector: '.post',
-                gutter: 20
-            });
-
-            $('.post').each(function(){
-                $(this).css('opacity', '1.0');
-            });
-            $('#loadmore').each(function(){
-                $(this).css('opacity', '1.0');
-            });
-        },
-
-        initializePostNavigation: function(){
-            if(!this.$main.hasClass('archive')){
-                return;
-            }
-
-            // The number of the next page to load (/page/x/).
-            this.numbers = $('.page-number').text().match(/[-+]?[0-9]*\.?[0-9]+/g);
-            this.pageNum = parseInt(this.numbers[0], 10);
-            // The maximum number of pages the current query can return.
-            this.max = parseInt(this.numbers[1], 10);
-            // The link of the next page of posts.
-            this.nextLink = $('.older-posts').attr('href');
-            /**
-             * Replace the traditional navigation with our own,
-             * but only if there is at least one page of new posts to load.
-             */
-            if(this.pageNum < this.max) {
-                // Insert the 'More Posts' link.
-                var html = [
-                    "<div id='loadmore' style='opacity: 0;'>",
-                    "<a class='btn'>Load more <i class='fa fa-plus-circle'></i></a>",
-                    "</div>"
-                ];
-
-                $('#feed').append(html.join(''));
-
-                // Remove the traditional navigation.
-                $('.pagination').remove();
-            } else {
-                $('.pagination').remove();
-            }
-
-            $('#loadmore a').on('click', $.proxy(this.loadMorePosts, this));
-        },
-
-        loadMorePosts: function(event){
-            var $masonry = this.$masonry;
-
-            event.preventDefault();
-
-            // Are there more posts to load?
-            if(this.pageNum < this.max) {
-
-                // Show that we're working.
-                $(this).html("<i class='fa fa-spinner fa-spin'></i>");
-
-                // Grab data from next page
-                $.get(this.nextLink, function(data){
-                    // Append all posts to #content
-                    var posts = $(data).find('.post');
-                    $.each(posts,function(){
-                        $(this).css('opacity', 0);
-                    });
-                    $masonry.append(posts);
-                    // Change nextLink to next page
-                    $('#feed').imagesLoaded(function(){
-                        this.pageNum++;
-                        this.nextLink = this.nextLink.substring(0, this.nextLink.indexOf('page/'));
-                        this.nextLink += 'page/'+(this.pageNum+1);
-
-                        // Remove button if last page else move the button to end of #content
-                        if(this.pageNum < this.max) {
-                            $('#loadmore').insertAfter($('#feed .post:last'));
-                            $('#loadmore a').html("Load more <i class='fa fa-plus-circle'></i>");
-                        } else {
-                            $('#loadmore').remove();
-                        }
-                        $masonry.masonry('appended', posts);
-                    });
-                });
-            } else {
-                $('#loadmore').remove();
-            }
-        },
-
-        loadedScripts: {},
 
         getScripts: function(scripts){
             var promise = $.Deferred();
@@ -279,6 +176,6 @@
             return this.getScripts([path]);
         }
     };
-
+    $.ajaxSetup({ cache: true });
     $($.proxy(Saga.initialize, Saga));
 }();

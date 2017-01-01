@@ -47,8 +47,8 @@
             this.getScript('/assets/js/helper/imagesloaded.pkgd.min.js').then($.proxy(function() {
                 // start with all paragraphs that have images
                 $('p:has(img)')
-                  // exclude p tags that contain things other than images
-                  .filter(function(i, p){ return $(p).has(':not(img)').length === 0 })
+                  // exclude p tags that contain things other than images or has full width images
+                  .filter(function(i, p){ return $(p).has(':not(img[src$="#full"])').length > 0 && $(p).has(':not(img)').length === 0 })
                   .addClass('gallery')
                   .hide()
                   .imagesLoaded($.proxy(this.onGallery, this))
@@ -63,9 +63,7 @@
         },
 
         onGallery: function(){
-            this.getScript('/assets/js/helper/gallery.min.js').then(function() { // Load in script for gallery
-
-                })
+            this.getScript('/assets/js/helper/gallery.min.js')
                 .then(function(){
                   var size = 0;
                   if ($(window).height() > $(window).width()){
@@ -73,11 +71,10 @@
                   } else {
                       size = $(window).width();
                   }
-                  if (size < 210){
-                      size = 210;
-                  }
+                  size = Math.max(size/5, 500);
+
                   $('.gallery').fadeIn().removeWhitespace().collagePlus({
-                          'targetHeight': 210
+                          'targetHeight': size
                   }).promise();
                 })
                 .then($.proxy(this.lightBox, this));

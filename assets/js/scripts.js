@@ -44,18 +44,27 @@
                 && $('p img:not(:only-child)').closest('p').length === 0){
                 return;
             }
-
             this.getScript('/assets/js/helper/imagesloaded.pkgd.min.js').then($.proxy(function() {
-                $('p a:not(:only-child) img').closest('p').addClass('gallery').hide();
-                $('p img:not(:only-child)').each(function(i, item) { $(item).wrap('<a href="'+item.src+'" class="post-gallery-image" title="'+item.alt+'"></a>') }).closest('p').addClass('gallery').hide();
-                $('.gallery').imagesLoaded($.proxy(this.onGallery, this));
+                // start with all paragraphs that have images
+                $('p:has(img)')
+                  // exclude p tags that contain things other than images
+                  .filter(function(i, p){ return $(p).has(':not(img)').length === 0 })
+                  .addClass('gallery')
+                  .hide()
+                  .imagesLoaded($.proxy(this.onGallery, this))
+                  .children()
+                  // wrap each image inside an <a> so the fluidbox plugin works
+                  .each(function(i, item) {
+                    $(item).wrap('<a href="'+item.src+'" class="post-gallery-image" title="'+item.alt+'"></a>')
+                  });
+
                 $(window).resize($.proxy(this.onGallery, this));
             }, this));
         },
 
         onGallery: function(){
             this.getScript('/assets/js/helper/gallery.min.js').then(function() { // Load in script for gallery
-                    return $('.gallery').fadeIn().promise();
+
                 })
                 .then(function(){
                   var size = 0;
@@ -67,9 +76,9 @@
                   if (size < 210){
                       size = 210;
                   }
-                  $('.gallery').removeWhitespace().collagePlus({
-                          'targetHeight': size/5
-                  });
+                  $('.gallery').fadeIn().removeWhitespace().collagePlus({
+                          'targetHeight': 210
+                  }).promise();
                 })
                 .then($.proxy(this.lightBox, this));
         },

@@ -184,9 +184,17 @@ body {
             width: 100%;
             @include box-sizing(border-box);
             padding: 1rem 1.5rem;
+            @include transition(all 0.3s);
             color: darken($white, 20%);
             font-size: 1.5rem;
             line-height: 2rem;
+        }
+
+        &:hover {
+          &:after {
+            background: rgba(0,0,0,0.8);
+            color: $white;
+          }
         }
     }
 }
